@@ -1,5 +1,11 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+console.log("hello world");
+import React from "react"
+import {render} from "react-dom"
+import TestComponent from "./TestComponent"
 
-ReactDOM.render(<App />, document.getElementById('root'));
+
+
+render(
+    <TestComponent/>,
+    document.querySelector('#mount_place')
+);

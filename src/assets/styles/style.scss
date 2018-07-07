@@ -1,0 +1,33 @@
+.container{
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+  height: 600px;
+  background-color: white;
+  justify-content: space-between;
+
+}
+body{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background-color: antiquewhite;
+
+}
+
+.list-body{
+  background-color: white;
+  width:100%;
+  height:500px;
+}
+.functional-container {
+display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height:100px;
+  align-items:center;
+  .button {
+    background-color: violet;
+    margin-left: 5%;
+  }
+}
