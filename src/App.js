@@ -5,11 +5,13 @@ import {Provider} from 'react-redux'
 // export reducer from 'reducers/reducer'
 
 
-const TodoArr = ["buy some milk", "learn redux", "do something"];
+const TodoArr = [ "learn redux", "do something"];
 const store = createStore((state = TodoArr, action)=>{
     if(action.type === "ADD_NEW_TODOS"){
-        TodoArr.push("done");
-        return state
+        return[
+            ...state,
+        action.payload
+        ]
     }else{
         return state
     }
@@ -20,6 +22,7 @@ window.store = store;
 
 store.subscribe(()=>{
    console.log(store.getState());
+
 });
 
 

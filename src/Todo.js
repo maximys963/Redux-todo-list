@@ -6,21 +6,23 @@ import Checkbox from '@material-ui/core/Checkbox'
 import { createStore } from 'redux';
 import {connect} from "react-redux"
 
- export default class TodoList extends Component{
+ class TodoList extends Component{
     render(){
 
     function MakeAction(element){
         const inpVal = document.getElementById("input");
+
+        const val = inpVal.value;
         console.log(inpVal.value);
         return{
                 type: "ADD_NEW_TODOS",
-                 inpVal
+                 payload: val,
         }
     }
        return(
            <div className="container">
-               <div className="list-body">
-                   {store.getState().map((elem)=>{
+               <div   className="list-body">
+                   {this.props.testStore.map((elem)=>{
                        return <div className="list-item" key={elem}><Checkbox/><div>{elem}</div></div>
                    })}
                </div>
@@ -34,7 +36,10 @@ import {connect} from "react-redux"
 }
 }
 
-const mapDispatchToProps = () =>{
-
-}
+export default connect(
+    state => ({
+        testStore: state
+    }),
+    dispatch =>({})
+)(TodoList)
 
