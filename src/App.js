@@ -12,6 +12,11 @@ const store = createStore((state = TodoArr, action)=>{
             ...state,
         action.payload
         ]
+    }else if(action.type === "CHANGE_CHECKBOX"){
+        return Object.assign({}, state, {
+            checkedElement: action.payload
+        })
+
     }else{
         return state
     }

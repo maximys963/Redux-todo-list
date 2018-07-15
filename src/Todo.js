@@ -7,28 +7,32 @@ import { createStore } from 'redux';
 import {connect} from "react-redux"
 
  class TodoList extends Component{
+
+    MakeAction(){
+        let val = this.todoInput.value;
+         // this.props.onMakeAction(val);
+        console.log(val);
+        this.props.onMakeAction(val);
+        this.todoInput.value = ''
+     }
+
+     CheckAction(){
+
+       this.props.onMakeCheck();
+
+     }
+
     render(){
-
-    function MakeAction(element){
-        const inpVal = document.getElementById("input");
-
-        const val = inpVal.value;
-        console.log(inpVal.value);
-        return{
-                type: "ADD_NEW_TODOS",
-                 payload: val,
-        }
-    }
        return(
            <div className="container">
-               <div   className="list-body">
+               <div  className="list-body">
                    {this.props.testStore.map((elem)=>{
-                       return <div className="list-item" key={elem}><Checkbox/><div>{elem}</div></div>
+                       return <div className="list-item" key={elem} ><Checkbox key={elem} onChange={this.CheckAction.bind(this)}/><div>{elem}</div></div>
                    })}
                </div>
                <div className="functional-container">
-               <Input id="input"/>
-               <Button  store={store} className="button" variant="contained" color='secondary' onClick={() => {store.dispatch(MakeAction())}}>ADD </Button>
+               <Input id='input' inputRef ={(Input) => {this.todoInput = Input}}/>
+               <Button className="button" variant="contained" color='secondary' onClick={this.MakeAction.bind(this)}>ADD </Button>
                </div>
            </div>
        )
@@ -40,6 +44,19 @@ export default connect(
     state => ({
         testStore: state
     }),
-    dispatch =>({})
+    dispatch =>({
+        onMakeAction: (todoItem)=>{
+            dispatch({
+                type: "ADD_NEW_TODOS",
+                payload: todoItem,
+            })
+},
+        onMakeCheck: () =>{
+            dispatch({ type: "CHANGE_CHECKBOX",
+                payload: "changed"})
+        }
+
+
+    })
 )(TodoList)
 
