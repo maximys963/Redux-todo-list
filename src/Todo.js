@@ -10,15 +10,14 @@ import {connect} from "react-redux"
 
     MakeAction(){
         let val = this.todoInput.value;
-         // this.props.onMakeAction(val);
         console.log(val);
         this.props.onMakeAction(val);
         this.todoInput.value = ''
      }
 
-     CheckAction(){
-
-       this.props.onMakeCheck();
+     CheckAction(e){
+         const divText = e.target.parentNode.parentNode.parentNode.childNodes[1];
+       e.target.checked ?  divText.style.textDecoration = 'line-through' : divText.style.textDecoration = 'none';
 
      }
 
@@ -26,8 +25,9 @@ import {connect} from "react-redux"
        return(
            <div className="container">
                <div  className="list-body">
-                   {this.props.testStore.map((elem)=>{
-                       return <div className="list-item" key={elem} ><Checkbox key={elem} onChange={this.CheckAction.bind(this)}/><div>{elem}</div></div>
+                   {this.props.testStore.map((elem, i)=>{
+
+                       return <div className="list-item" key={i} ><Checkbox  onChange={this.CheckAction.bind(this)}/><div>{elem}</div></div>
                    })}
                </div>
                <div className="functional-container">
