@@ -21,11 +21,13 @@ body{
   justify-content: flex-start;
   flex-direction: column;
   align-items: baseline;
+
 .list-item{
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  width: 100%;
 }
 }
 .functional-container {
@@ -37,6 +39,16 @@ body{
   .button {
     background-color: violet;
     margin-left: 5%;
+  }
+  .button-x{
+
+    width: 10px;
+    height: 10px;
+    background-color: greenyellow;
+  }
+  .button-star{
+    width: 10px;
+    height: 10px;
   }
 
 }
