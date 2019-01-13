@@ -1,43 +1,28 @@
-import React, {Component} from 'react'
-import Todo from "./Todo"
-import {createStore} from 'redux'
-import {Provider} from 'react-redux'
-// export reducer from 'reducers/reducer'
+import React, { Component } from 'react';
+import logo from './logo.svg';
+import './App.css';
 
-
-const TodoArr = [ "learn redux", "do something"];
-const store = createStore((state = TodoArr, action)=>{
-    if(action.type === "ADD_NEW_TODOS"){
-        return[
-            ...state,
-        action.payload
-        ]
-    }else if(action.type === "DELETE_TODOS"){
-        return state
-
-
-    }else{
-        return state
-    }
-
-},window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
-window.store = store;
-
-
-store.subscribe(()=>{
-   console.log(store.getState());
-
-});
-
-
-class App extends Component{
-    render(){
-        return(
-            <Provider store={store}>
-                <Todo />
-            </Provider>
-        )
-    }
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <p>
+            Edit <code>src/App.js</code> and save to reload.
+          </p>
+          <a
+            className="App-link"
+            href="https://reactjs.org"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Learn React
+          </a>
+        </header>
+      </div>
+    );
+  }
 }
 
-export default App
+export default App;
