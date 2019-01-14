@@ -1,16 +1,19 @@
 import React    from 'react';
 import {Button, Input, Grid} from 'semantic-ui-react';
 
-const FilterPanel = () => (
+const FilterPanel = ({searchTodo, toggleFilters, showStatus}) => (
   <Grid>
       <Grid.Row centered >
-      <Input placeholder='Search'/>
+      <Input placeholder='Search' onChange={searchTodo}/>
       <Button basic
-              color='green'>All</Button>
+              color={showStatus === 'all' ? 'green': 'grey'}
+              onClick={toggleFilters}>All</Button>
       <Button basic
-              color='grey'>Active</Button>
+              color={showStatus === 'active' ? 'green': 'grey'}
+              onClick={toggleFilters}>Active</Button>
       <Button basic
-              color='grey'>Done</Button>
+              color={showStatus === 'done' ? 'green': 'grey'}
+              onClick={toggleFilters}>Done</Button>
       </Grid.Row>
   </Grid>
 );

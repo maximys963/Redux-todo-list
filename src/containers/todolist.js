@@ -12,10 +12,12 @@ class ToDoList extends Component{
         this.state = {
             todoData:[
                 {
+                    show: true,
                     text: 'Lorem ipsum dolor',
-                    highOrder: false,
+                    active: false,
                 }],
-            inputValue: ''
+            inputValue: '',
+            showStatus: 'all',
     }}
 
     onChangeInput = (e) =>{
@@ -29,10 +31,11 @@ class ToDoList extends Component{
     toggleAddItem = () =>{
         let inputValue = this.state.inputValue;
         let currentToDoArr = this.state.todoData;
-        currentToDoArr.push({text: inputValue, highOrder: false});
+        currentToDoArr.push({text: inputValue, highOrder: false, show: true});
         this.setState({
             todoData: currentToDoArr,
             inputValue: ''
+
         })
     };
     deleteItem = (id) => {
@@ -43,7 +46,51 @@ class ToDoList extends Component{
         this.setState({
             todoData: changedState
         })
+    };
 
+    toggleHighOrder = (id) => {
+        const changeItemOrder = this.state.todoData;
+        changeItemOrder.forEach((elem, i) => {
+            if(id === i){ elem.active = true }
+            });
+        console.log(changeItemOrder);
+        this.setState({
+            todoData: changeItemOrder
+        })
+    };
+
+    searchTodo = (e) => {
+        let innerText = e.target.value;
+        let stateToDoItems = this.state.todoData;
+        stateToDoItems.forEach(elem => {
+                if(elem.text.toLowerCase().indexOf(innerText.toLowerCase()) === -1){
+                    elem.show = false;
+                }else{
+                    elem.show = true;
+                }
+        });
+        // console.log(stateToDoItems);
+        this.setState({
+           todoData: stateToDoItems
+        })
+    };
+
+
+    toggleFilters = (e) => {
+        const button = e.target.innerText;
+        console.log('here');
+        switch (button){
+            case 'All':
+                this.setState({showStatus: 'all'});
+                break;
+            case 'Active':
+                this.setState({showStatus: 'active'});
+                break;
+            case 'Done':
+                this.setState({showStatus: 'done'});
+                break;
+            default: this.setState({showStatus: 'all'});
+        }
     };
 
 
@@ -59,20 +106,29 @@ class ToDoList extends Component{
                     <Grid.Row>
                     <Grid.Column width={8}>
                         <Segment>
-                           <FilterPanel/>
-                            {this.state.todoData.map((elem, i)=>(
-                                <ListItem
-                                    key={i}
-                                    text={elem.text}
-                                    highOrder={elem.highOrder}
-                                    deleteItem={() => this.deleteItem(i)}
-                                />
-                            ))
+                           <FilterPanel
+                           searchTodo={this.searchTodo}
+                           toggleFilters={this.toggleFilters}
+                           showStatus={this.state.showStatus}
+                           />
+                            {this.state.todoData.map((elem, i) => {
+                                if(elem.show){
+                                    return(
+                                        <ListItem
+                                            key={i}
+                                            text={elem.text}
+                                            highOrder={elem.active}
+                                            deleteItem={() => this.deleteItem(i)}
+                                            toggleOrder={() => this.toggleHighOrder(i)}
+                                        />)
+                                }
+                            })
                             }
                            <AddItemPanel
                                    value={this.state.inputValue}
                                    onChange={this.onChangeInput}
-                                   onClick={this.toggleAddItem}/>
+                                   onClick={this.toggleAddItem}
+                           />
                         </Segment>
                     </Grid.Column>
                     <Grid.Column width={4}>

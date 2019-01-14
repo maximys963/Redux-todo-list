@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, Input, Grid} from 'semantic-ui-react';
-
+import PropTypes from 'prop-types';
 
 const AddItemPanel = ({value, onChange, onClick}) =>(
     <Grid>
@@ -15,3 +15,10 @@ const AddItemPanel = ({value, onChange, onClick}) =>(
 );
 
 export default AddItemPanel;
+
+AddItemPanel.propTypes = {
+    value: PropTypes.string,
+    onChange: PropTypes.func,
+    onClick: PropTypes.func
+};
+
