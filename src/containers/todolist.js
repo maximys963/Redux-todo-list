@@ -15,6 +15,7 @@ class ToDoList extends Component{
                     show: true,
                     text: 'Lorem ipsum dolor',
                     active: false,
+                    done: false
                 }],
             inputValue: '',
             showStatus: 'all',
@@ -31,7 +32,7 @@ class ToDoList extends Component{
     toggleAddItem = () =>{
         let inputValue = this.state.inputValue;
         let currentToDoArr = this.state.todoData;
-        currentToDoArr.push({text: inputValue, highOrder: false, show: true});
+        currentToDoArr.push({text: inputValue, highOrder: false, show: true, done: false});
         this.setState({
             todoData: currentToDoArr,
             inputValue: ''
@@ -69,16 +70,13 @@ class ToDoList extends Component{
                     elem.show = true;
                 }
         });
-        // console.log(stateToDoItems);
         this.setState({
            todoData: stateToDoItems
         })
     };
 
-
     toggleFilters = (e) => {
         const button = e.target.innerText;
-        console.log('here');
         switch (button){
             case 'All':
                 this.setState({showStatus: 'all'});
@@ -91,6 +89,20 @@ class ToDoList extends Component{
                 break;
             default: this.setState({showStatus: 'all'});
         }
+    };
+
+    toggleDone = (id) => {
+        const itemList = this.state.todoData;
+        itemList.forEach((elem, i) => {
+            if(id === i){ elem.done = true }
+        });
+        this.setState({
+            todoData: itemList
+        })
+    };
+
+    toggleActive = (id) => {
+
     };
 
 
@@ -111,7 +123,20 @@ class ToDoList extends Component{
                            toggleFilters={this.toggleFilters}
                            showStatus={this.state.showStatus}
                            />
-                            {this.state.todoData.map((elem, i) => {
+                            {
+                                this.state.todoData
+                                    .filter((elem) => {
+                                   switch(this.state.showStatus){
+                                       case 'all':
+                                      return(elem);
+                                       case  'active':
+                                      return(elem.active);
+                                       case 'done':
+                                      return(elem.done);
+                                       default: return(elem)
+                                   }
+                                    })
+                                    .map((elem, i) => {
                                 if(elem.show){
                                     return(
                                         <ListItem
@@ -120,6 +145,8 @@ class ToDoList extends Component{
                                             highOrder={elem.active}
                                             deleteItem={() => this.deleteItem(i)}
                                             toggleOrder={() => this.toggleHighOrder(i)}
+                                            done={elem.done}
+                                            toggleDone={()=> this.toggleDone(i)}
                                         />)
                                 }
                             })
