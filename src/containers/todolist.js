@@ -19,6 +19,8 @@ class ToDoList extends Component{
                 }],
             inputValue: '',
             showStatus: 'all',
+            done: 0,
+            active: 0
     }}
 
     onChangeInput = (e) =>{
@@ -52,12 +54,16 @@ class ToDoList extends Component{
     toggleHighOrder = (id) => {
         const changeItemOrder = this.state.todoData;
         changeItemOrder.forEach((elem, i) => {
-            if(id === i){ elem.active = true }
+            if(id === i){
+                elem.active = true;
+                elem.done = false
+            }
             });
         console.log(changeItemOrder);
         this.setState({
             todoData: changeItemOrder
-        })
+        });
+        this.countActive();
     };
 
     searchTodo = (e) => {
@@ -94,15 +100,41 @@ class ToDoList extends Component{
     toggleDone = (id) => {
         const itemList = this.state.todoData;
         itemList.forEach((elem, i) => {
-            if(id === i){ elem.done = true }
+            if(id === i){
+                elem.done = true;
+                elem.active= false;
+            }
         });
         this.setState({
             todoData: itemList
+        });
+        this.countDone();
+    };
+
+    countActive = () => {
+      let amount = 0;
+      const itemList = this.state.todoData;
+      itemList.forEach((elem) =>{
+          if(elem.active){
+              amount++
+          }
+      });
+        this.setState({
+            active: amount
         })
     };
 
-    toggleActive = (id) => {
-
+    countDone = () => {
+        let amount = 0;
+        const itemList = this.state.todoData;
+        itemList.forEach((elem) =>{
+            if(elem.done){
+                amount++
+            }
+        });
+        this.setState({
+            done: amount
+        })
     };
 
 
@@ -160,7 +192,8 @@ class ToDoList extends Component{
                     </Grid.Column>
                     <Grid.Column width={4}>
                         <Segment>
-                            2
+                            <p>Active: {this.state.active}</p>
+                            <p>Done: {this.state.done} </p>
                         </Segment>
                     </Grid.Column>
                     </Grid.Row>
