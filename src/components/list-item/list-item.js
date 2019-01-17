@@ -1,25 +1,27 @@
 import React from 'react';
 import {Button, Grid} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import './list_item.css'
 
 const ListItem = ({text, highOrder, deleteItem, toggleOrder, toggleDone, done}) => {
     const itemStyle = {
-        color: highOrder ? 'red' : 'black',
+        color: highOrder ? 'tomato' : 'black',
         textDecoration: done ? 'line-through' : 'none'
     };
     return (
-        <Grid>
-            <Grid.Row centered>
-                <p  onClick={toggleDone}
-                    style={itemStyle}>{text}</p>
+        <Grid className='list-item-container'>
+            <Grid.Row left >
+                <p className='list-item-text'
+                   onClick={toggleDone}
+                   style={itemStyle}>{text}</p>
                 <Button
-                    icon='x'
-                    negative
-                    onClick={deleteItem}/>
+                   icon='x'
+                   negative
+                   onClick={deleteItem}/>
                 <Button
-                    icon='thumb tack'
-                    positive
-                    onClick={toggleOrder}
+                   icon='thumb tack'
+                   positive
+                   onClick={toggleOrder}
                 />
             </Grid.Row>
         </Grid>

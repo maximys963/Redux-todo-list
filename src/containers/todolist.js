@@ -3,7 +3,7 @@ import { Grid,
          Segment,
          Header }          from 'semantic-ui-react'
 import FilterPanel         from '../components/filter-panel';
-import ListItem            from '../components/list-item';
+import ListItem            from '../components/list-item/list-item';
 import AddItemPanel        from '../components/add-item-panel';
 
 class ToDoList extends Component{
@@ -19,8 +19,6 @@ class ToDoList extends Component{
                 }],
             inputValue: '',
             showStatus: 'all',
-            done: 0,
-            active: 0
     }}
 
     onChangeInput = (e) =>{
@@ -34,36 +32,41 @@ class ToDoList extends Component{
     toggleAddItem = () =>{
         let inputValue = this.state.inputValue;
         let currentToDoArr = this.state.todoData;
-        currentToDoArr.push({text: inputValue, highOrder: false, show: true, done: false});
+        const newArray = [{text: inputValue, highOrder: false, show: true, done: false}, ...currentToDoArr];
         this.setState({
-            todoData: currentToDoArr,
+            todoData: newArray,
             inputValue: ''
 
         })
     };
     deleteItem = (id) => {
-        const changedState = this.state.todoData
-            .filter((elem,index) => {
-            return( index !== id)
-            });
-        this.setState({
-            todoData: changedState
+        this.setState(({todoData})=>{
+            const before = todoData.slice(0, id);
+            const after = todoData.slice(id + 1);
+            const newArray = [...before, ...after];
+            return{
+                todoData: newArray
+            }
         })
     };
 
-    toggleHighOrder = (id) => {
-        const changeItemOrder = this.state.todoData;
-        changeItemOrder.forEach((elem, i) => {
-            if(id === i){
-                elem.active = true;
-                elem.done = false
-            }
-            });
-        console.log(changeItemOrder);
+    toggleActive = (id) => {
+        const itemList = this.state.todoData;
+        const oldItem = itemList.filter( (elem, i)=>(
+            i === id
+        ));
+        const newItem = {
+            ...oldItem[0],
+            active: !oldItem[0].active
+        };
+        const newArray = [
+            ...itemList.slice(0, id),
+            newItem,
+            ...itemList.slice(id+1)
+        ];
         this.setState({
-            todoData: changeItemOrder
+            todoData: newArray
         });
-        this.countActive();
     };
 
     searchTodo = (e) => {
@@ -99,46 +102,30 @@ class ToDoList extends Component{
 
     toggleDone = (id) => {
         const itemList = this.state.todoData;
-        itemList.forEach((elem, i) => {
-            if(id === i){
-                elem.done = true;
-                elem.active= false;
-            }
-        });
+        const oldItem = itemList.filter( (elem, i)=>(
+            i === id
+        ));
+        const newItem = {
+            ...oldItem[0],
+        done: !oldItem[0].done
+        };
+        const newArray = [
+            ...itemList.slice(0, id),
+            newItem,
+            ...itemList.slice(id+1)
+        ];
         this.setState({
-            todoData: itemList
+            todoData: newArray
         });
-        this.countDone();
     };
 
-    countActive = () => {
-      let amount = 0;
-      const itemList = this.state.todoData;
-      itemList.forEach((elem) =>{
-          if(elem.active){
-              amount++
-          }
-      });
-        this.setState({
-            active: amount
-        })
-    };
-
-    countDone = () => {
-        let amount = 0;
-        const itemList = this.state.todoData;
-        itemList.forEach((elem) =>{
-            if(elem.done){
-                amount++
-            }
-        });
-        this.setState({
-            done: amount
-        })
-    };
 
 
     render(){
+        const active  = this.state.todoData
+            .filter( elem => elem.active).length ;
+        const done = this.state.todoData
+            .filter( elem => elem.done).length ;
         return(
             <div>
                 <Grid stackable>
@@ -176,7 +163,7 @@ class ToDoList extends Component{
                                             text={elem.text}
                                             highOrder={elem.active}
                                             deleteItem={() => this.deleteItem(i)}
-                                            toggleOrder={() => this.toggleHighOrder(i)}
+                                            toggleOrder={() => this.toggleActive(i)}
                                             done={elem.done}
                                             toggleDone={()=> this.toggleDone(i)}
                                         />)
@@ -192,8 +179,8 @@ class ToDoList extends Component{
                     </Grid.Column>
                     <Grid.Column width={4}>
                         <Segment>
-                            <p>Active: {this.state.active}</p>
-                            <p>Done: {this.state.done} </p>
+                            <p>Active: {active ? active: 0}</p>
+                            <p>Done: {done ? done : 0} </p>
                         </Segment>
                     </Grid.Column>
                     </Grid.Row>
