@@ -13,16 +13,7 @@ class ToDoList extends Component{
     constructor(props){
         super(props);
         this.state = {
-            todoData:[
-                {
-                    show: true,
-                    text: 'Lorem ipsum dolor',
-                    active: false,
-                    done: false,
-                    id: 1,
-                }],
             inputValue: '',
-            showStatus: 'all',
     }}
 
     onChangeInput = (e) =>{
@@ -52,17 +43,20 @@ class ToDoList extends Component{
 
     searchTodo = (e) => {
         let innerText = e.target.value;
-        let stateToDoItems = this.state.todoData;
-        stateToDoItems.forEach(elem => {
-                if(elem.text.toLowerCase().indexOf(innerText.toLowerCase()) === -1){
-                    elem.show = false;
-                }else{
-                    elem.show = true;
-                }
+
+
+         /*   stateToDoItems.forEach(elem => {
+                    if(elem.text.toLowerCase().indexOf(innerText.toLowerCase()) === -1){
+                        elem.show = false;
+                    }else{
+                        elem.show = true;
+                    }
         });
         this.setState({
            todoData: stateToDoItems
         })
+        */
+        this.props.searchTodo(innerText);
     };
 
     toggleFilters = (e) => {

@@ -3,7 +3,8 @@ import {
     ADD_ITEM,
     DELETE_ITEM,
     MAKE_ACTIVE_ITEM,
-    MAKE_DONE_ITEM
+    MAKE_DONE_ITEM,
+    SEARCH_TODO
 } from "../actions/actions";
 
 
@@ -33,10 +34,17 @@ export function mainReducer (state = {}, action) {
         case MAKE_DONE_ITEM:
             return{
                 ...state,
-                todoData: state.todoData.map( elem => elem.id === action.itemId ?
-                    {...elem, done: !elem.done} :
-                    elem
+                todoData: state.todoData.map( elem => elem.id === action.itemId
+                    ? {...elem, done: !elem.done}
+                    : elem
                 )};
+        case SEARCH_TODO:
+            return{
+                ...state,
+                todoData: state.todoData.map(elem =>  elem.text.toLowerCase().indexOf(action.inputValue.toLowerCase()) === -1
+                    ? {...elem, show: false}
+                    : {...elem, show: true}
+        )};
         default: return state
     }
     

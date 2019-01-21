@@ -2,7 +2,8 @@ import {ADD_ITEM,
     DELETE_ITEM,
     CHANGE_FILTER,
     MAKE_ACTIVE_ITEM,
-    MAKE_DONE_ITEM
+    MAKE_DONE_ITEM,
+    SEARCH_TODO
 } from "../actions/actions";
 
 export const addItem = (item) =>({
@@ -28,4 +29,9 @@ export const makeActiveItem = (itemId) =>({
 export const makeDoneItem = (itemId) =>({
     type: MAKE_DONE_ITEM,
     itemId: itemId
+});
+
+export const searchTodo = (input) =>({
+    type: SEARCH_TODO,
+    inputValue: input
 });
