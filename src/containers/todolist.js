@@ -1,10 +1,13 @@
-import React, {Component}  from 'react';
+import React, {Component}   from 'react';
 import { Grid,
          Segment,
-         Header }          from 'semantic-ui-react'
-import FilterPanel         from '../components/filter-panel';
-import ListItem            from '../components/list-item/list-item';
-import AddItemPanel        from '../components/add-item-panel';
+         Header }           from 'semantic-ui-react'
+import uniqid               from 'uniqid'
+import FilterPanel          from '../components/filter-panel';
+import ListItem             from '../components/list-item/list-item';
+import AddItemPanel         from '../components/add-item-panel';
+import { connect }          from 'react-redux'
+import * as actions         from "../action-creators/action-creators";
 
 class ToDoList extends Component{
     constructor(props){
@@ -15,7 +18,8 @@ class ToDoList extends Component{
                     show: true,
                     text: 'Lorem ipsum dolor',
                     active: false,
-                    done: false
+                    done: false,
+                    id: 1,
                 }],
             inputValue: '',
             showStatus: 'all',
@@ -26,47 +30,24 @@ class ToDoList extends Component{
         this.setState({
             inputValue: value
         });
-
     };
 
     toggleAddItem = () =>{
+        let uniqueValue = uniqid();
         let inputValue = this.state.inputValue;
-        let currentToDoArr = this.state.todoData;
-        const newArray = [{text: inputValue, highOrder: false, show: true, done: false}, ...currentToDoArr];
+        const newItem = {text: inputValue, active: false, show: true, done: false, id: uniqueValue};
+        this.props.addItem(newItem);
         this.setState({
-            todoData: newArray,
             inputValue: ''
-
         })
     };
+
     deleteItem = (id) => {
-        this.setState(({todoData})=>{
-            const before = todoData.slice(0, id);
-            const after = todoData.slice(id + 1);
-            const newArray = [...before, ...after];
-            return{
-                todoData: newArray
-            }
-        })
+        this.props.deleteItem(id);
     };
 
     toggleActive = (id) => {
-        const itemList = this.state.todoData;
-        const oldItem = itemList.filter( (elem, i)=>(
-            i === id
-        ));
-        const newItem = {
-            ...oldItem[0],
-            active: !oldItem[0].active
-        };
-        const newArray = [
-            ...itemList.slice(0, id),
-            newItem,
-            ...itemList.slice(id+1)
-        ];
-        this.setState({
-            todoData: newArray
-        });
+        this.props.makeActiveItem(id)
     };
 
     searchTodo = (e) => {
@@ -88,44 +69,27 @@ class ToDoList extends Component{
         const button = e.target.innerText;
         switch (button){
             case 'All':
-                this.setState({showStatus: 'all'});
+                this.props.changeFilter('all');
                 break;
             case 'Active':
-                this.setState({showStatus: 'active'});
+                this.props.changeFilter('active');
                 break;
             case 'Done':
-                this.setState({showStatus: 'done'});
+                this.props.changeFilter('done');
                 break;
-            default: this.setState({showStatus: 'all'});
+            default: this.props.changeFilter('all');
         }
     };
 
     toggleDone = (id) => {
-        const itemList = this.state.todoData;
-        const oldItem = itemList.filter( (elem, i)=>(
-            i === id
-        ));
-        const newItem = {
-            ...oldItem[0],
-        done: !oldItem[0].done
-        };
-        const newArray = [
-            ...itemList.slice(0, id),
-            newItem,
-            ...itemList.slice(id+1)
-        ];
-        this.setState({
-            todoData: newArray
-        });
+        this.props.makeDoneItem(id)
     };
 
-
-
     render(){
-        const active  = this.state.todoData
-            .filter( elem => elem.active).length ;
-        const done = this.state.todoData
-            .filter( elem => elem.done).length ;
+        const active  = this.props.data
+            .filter( elem => elem.active).length;
+        const done = this.props.data
+            .filter( elem => elem.done).length;
         return(
             <div>
                 <Grid stackable>
@@ -140,12 +104,11 @@ class ToDoList extends Component{
                            <FilterPanel
                            searchTodo={this.searchTodo}
                            toggleFilters={this.toggleFilters}
-                           showStatus={this.state.showStatus}
                            />
                             {
-                                this.state.todoData
+                                  this.props.data
                                     .filter((elem) => {
-                                   switch(this.state.showStatus){
+                                   switch(this.props.dataFilter){
                                        case 'all':
                                       return(elem);
                                        case  'active':
@@ -160,21 +123,23 @@ class ToDoList extends Component{
                                     return(
                                         <ListItem
                                             key={i}
+                                            id={elem.id}
                                             text={elem.text}
-                                            highOrder={elem.active}
-                                            deleteItem={() => this.deleteItem(i)}
-                                            toggleOrder={() => this.toggleActive(i)}
+                                            active={elem.active}
+                                            deleteItem={() => this.deleteItem(elem.id)}
+                                            toggleActive={() => this.toggleActive(elem.id)}
                                             done={elem.done}
-                                            toggleDone={()=> this.toggleDone(i)}
-                                        />)
+                                            toggleDone={()=> this.toggleDone(elem.id)}/>
+                                    )
+                                }else {
+                                    return null
                                 }
                             })
                             }
                            <AddItemPanel
                                    value={this.state.inputValue}
                                    onChange={this.onChangeInput}
-                                   onClick={this.toggleAddItem}
-                           />
+                                   onClick={this.toggleAddItem}/>
                         </Segment>
                     </Grid.Column>
                     <Grid.Column width={4}>
@@ -185,10 +150,16 @@ class ToDoList extends Component{
                     </Grid.Column>
                     </Grid.Row>
                 </Grid>
-
             </div>
         );
     }
 }
 
-export default ToDoList;
+const mapStateToProps = (state) => ({
+        data: state.todoData,
+        dataFilter: state.showStatus
+    });
+
+
+
+export default connect(mapStateToProps, actions)(ToDoList);

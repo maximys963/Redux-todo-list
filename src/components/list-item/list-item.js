@@ -3,14 +3,14 @@ import {Button, Grid} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import './list_item.css'
 
-const ListItem = ({text, highOrder, deleteItem, toggleOrder, toggleDone, done}) => {
+const ListItem = ({text, active, deleteItem, toggleActive, toggleDone, done}) => {
     const itemStyle = {
-        color: highOrder ? 'tomato' : 'black',
+        color: active ? 'tomato' : 'black',
         textDecoration: done ? 'line-through' : 'none'
     };
     return (
         <Grid className='list-item-container'>
-            <Grid.Row left >
+            <Grid.Row >
                 <p className='list-item-text'
                    onClick={toggleDone}
                    style={itemStyle}>{text}</p>
@@ -21,7 +21,7 @@ const ListItem = ({text, highOrder, deleteItem, toggleOrder, toggleDone, done}) 
                 <Button
                    icon='thumb tack'
                    positive
-                   onClick={toggleOrder}
+                   onClick={toggleActive}
                 />
             </Grid.Row>
         </Grid>

@@ -1,5 +1,6 @@
 import React    from 'react';
 import {Button, Input, Grid} from 'semantic-ui-react';
+import {connect} from 'react-redux'
 
 const FilterPanel = ({searchTodo, toggleFilters, showStatus}) => (
   <Grid>
@@ -18,4 +19,8 @@ const FilterPanel = ({searchTodo, toggleFilters, showStatus}) => (
   </Grid>
 );
 
-export default FilterPanel;
+const mapStateToProps = (state) => ({
+     showStatus: state.showStatus
+});
+
+export default connect(mapStateToProps)(FilterPanel)
